@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      # Add commands to install dependencies, like your build tool or Docker if needed
+  pre_build:
+    commands:
+      - echo Pre-build steps...
+      # Add any pre-build steps like unit tests
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Running SonarQube analysis...
+      # - ./gradlew sonarqube -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
+      # Replace './gradlew sonarqube' with your build command and SonarQube analysis
+  post_build:
+    commands:
+      - echo Build and analysis completed on `date`
