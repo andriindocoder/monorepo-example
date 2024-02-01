@@ -13,6 +13,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Running SonarQube analysis...
+      - sh ./test.sh
       # - ./gradlew sonarqube -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
       # Replace './gradlew sonarqube' with your build command and SonarQube analysis
   post_build:
