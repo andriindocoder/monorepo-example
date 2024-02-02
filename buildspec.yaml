@@ -3,9 +3,8 @@ version: 0.2
 phases:
   install:
     commands:
-      # Add commands to install dependencies for all projects if needed
       - echo Install root dependencies...
-      # - npm install
+      - yarn install # If there are any root dependencies to install
 
   pre_build:
     commands:
@@ -13,7 +12,7 @@ phases:
       - chmod +x detect_changes.sh
       - echo Checking for changes in the packages...
       - CHANGED_PROJECTS=$(./detect_changes.sh)
-      - echo "Changed packages" $CHANGED_PROJECTS
+      - echo Changed packages: $CHANGED_PROJECTS
 
   build:
     commands:
@@ -21,14 +20,21 @@ phases:
       - |
         for PROJECT in $CHANGED_PROJECTS; do
           cd packages/$PROJECT
-          if [[ "$PROJECT" == "simple-express-server" ]]; then
-            echo "SONARQUBE FOR SIMPLE-EXPRESS-SERVER"
-          elif [[ "$PROJECT" == "simple-react-app" ]]; then
-            echo "SONARQUBE FOR SIMPLE-REACT-APP"
-          elif [[ "$PROJECT" == "simple-shared-data" ]]; then
-            echo "SONARQUBE FOR SIMPLE-SHARED-DATA"
+          if [[ "$PROJECT" == "microservice-A" ]]; then
+            echo "Running Maven build and SonarQube analysis for Microservice-A"
+            mvn clean install
+            mvn sonar:sonar -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
+          elif [[ "$PROJECT" == "microservice-B" ]]; then
+            echo "Running Gradle build and SonarQube analysis for Microservice-B"
+            ./gradlew build
+            ./gradlew sonarqube -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
+          elif [[ "$PROJECT" == "microservice-C" ]]; then
+            echo "Running Yarn build and SonarQube analysis for Microservice-C"
+            yarn install
+            yarn run build
+            sonar-scanner -Dsonar.projectKey=[MicroserviceC_ProjectKey] -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
           fi
-          cd ../..
+          cd - # This takes you back to the previous directory (one level up)
         done
 
   post_build:
