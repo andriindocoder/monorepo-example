@@ -11,8 +11,7 @@ phases:
       - echo Making detect_changes.sh executable...
       - chmod +x detect_changes.sh
       - echo Checking for changes in the packages...
-      - CHANGED_PROJECTS=$(./detect_changes.sh)
-      - echo Changed packages: $CHANGED_PROJECTS
+      - echo "Changed packages:" $(./detect_changes.sh)
 
   build:
     commands:
