@@ -3,19 +3,36 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Installing dependencies...
-      # Add commands to install dependencies, like your build tool or Docker if needed
+      # Add commands to install dependencies for all projects if needed
+      - echo Install root dependencies...
+      - yarn install
+
   pre_build:
     commands:
-      - echo Pre-build steps...
-      # Add any pre-build steps like unit tests
+      - echo Making detect_changes.sh executable...
+      - chmod +x detect_changes.sh
+      - echo Checking for changes in the packages...
+      - CHANGED_PROJECTS=$(./detect_changes.sh)
+      - echo Changed packages: $CHANGED_PROJECTS
+
   build:
     commands:
-      - echo Build started on `date`
-      - echo Running SonarQube analysis...
-      - sh ./test.sh
-      # - ./gradlew sonarqube -Dsonar.host.url=[SonarQube_URL] -Dsonar.login=[SonarQube_Token]
-      # Replace './gradlew sonarqube' with your build command and SonarQube analysis
+      - echo Building and analyzing changed packages...
+      - |
+        for PROJECT in $CHANGED_PROJECTS; do
+          cd packages/$PROJECT
+          if [[ "$PROJECT" == "simple-express-server" ]]; then
+            echo "SONARQUBE FOR SIMPLE-EXPRESS-SERVER"
+          elif [[ "$PROJECT" == "simple-react-app" ]]; then
+            echo "SONARQUBE FOR SIMPLE-REACT-APP"
+          elif [[ "$PROJECT" == "simple-shared-data" ]]; then
+            echo "SONARQUBE FOR SIMPLE-SHARED-DATA"
+          fi
+          cd ../..
+        done
+
   post_build:
     commands:
-      - echo Build and analysis completed on `date`
+      - echo Build and analysis completed for changed packages.
+
+# Make sure to replace the placeholder values with your actual SonarQube URL, tokens, and project keys.
