@@ -3,8 +3,9 @@ version: 0.2
 phases:
   install:
     commands:
+      - which git || (echo "Git is not installed" && exit 1)
       - echo Install root dependencies...
-      - yarn install # If there are any root dependencies to install
+      # - yarn install # If there are any root dependencies to install
 
   pre_build:
     commands:
