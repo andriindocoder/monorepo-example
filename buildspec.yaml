@@ -5,7 +5,7 @@ phases:
     commands:
       # Add commands to install dependencies for all projects if needed
       - echo Install root dependencies...
-      - yarn install
+      # - npm install
 
   pre_build:
     commands:
